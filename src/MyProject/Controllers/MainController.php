@@ -20,7 +20,7 @@ class MainController
 
     public function main()
     {
-        $articles = $this->db->query('SELECT * FROM `articles`;', [], Article::class);
+        $articles = Article::getAll();
         $this->view->renderHtml('main/main.php', ['articles' => $articles], 'Home');
     }
 
