@@ -4,22 +4,21 @@ namespace MyProject\Models\Articles;
 
 use MyProject\Models\ActiveRecordEntity;
 use MyProject\Models\Users\User;
-use MyProject\Services\Database;
 
 class Article extends ActiveRecordEntity
 {
 
     /** @var string */
-    private $name;
+    protected $name;
 
     /** @var string */
-    private $text;
+    protected $text;
 
     /** @var int */
-    private $authorId;
+    protected $authorId;
 
     /** @var string */
-    private $createdAt;
+    protected $createdAt;
 
     /**
      * @return string
@@ -35,6 +34,10 @@ class Article extends ActiveRecordEntity
     public function getText(): string
     {
         return $this->text;
+    }
+
+    public function getAuthor():User{
+        return  User::getById($this->authorId);
     }
 
     protected static function getTableName(): string
