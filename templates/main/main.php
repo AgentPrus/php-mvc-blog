@@ -9,12 +9,12 @@
                         <div class="card">
                             <div class="card-header">
                                 <h5 class="card-title">
-                                    <a href="articles/<?= $article['id'] ?>"
-                                       class="text-dark"><?= $article['name'] ?></a>
+                                    <a href="articles/<?= $article->getId() ?>"
+                                       class="text-dark"><?= $article->getName() ?></a>
                                 </h5>
                             </div>
                             <div class="card-body">
-                                <p class="lead"><?= $article['text'] ?></p>
+                                <p class="lead"><?= $article->getText() ?></p>
                             </div>
                         </div>
                     </div>

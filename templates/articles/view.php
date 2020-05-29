@@ -1,8 +1,8 @@
 <?php include __DIR__ . '/../header.php'; ?>
 <section id="main-content py-4">
     <div class="container">
-        <h2 class="dispaly-3"><?=$article['name'] ?></h2>
-        <p class="lead"><?=$article['text'] ?></p>
+        <h2 class="dispaly-3"><?=$article->getName() ?></h2>
+        <p class="lead"><?=$article->getText() ?></p>
     </div>
 </section>
 
