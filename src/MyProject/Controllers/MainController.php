@@ -15,7 +15,7 @@ class MainController
     public function __construct()
     {
         $this->view = new View(__DIR__ . '/../../../templates');
-        $this->db = new Database();
+        $this->db = Database::getInstance();
     }
 
     public function main()

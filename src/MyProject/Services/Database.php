@@ -7,7 +7,9 @@ class Database
 
     private $conn;
 
-    public function __construct()
+    private static $instance;
+
+    private function __construct()
     {
         $db_options = (require __DIR__ . '/../../settings.php')['db'];
 
@@ -17,14 +19,23 @@ class Database
         $this->conn->exec('SET NAMES UTF8');
     }
 
-    public function query(string $sql, $params = [], string $className = 'stdClass'): ?array {
+    public function query(string $sql, $params = [], string $className = 'stdClass'): ?array
+    {
         $stmt = $this->conn->prepare($sql);
         $result = $stmt->execute($params);
 
-        if(false === $result){
+        if (false === $result) {
             return null;
         }
 
         return $stmt->fetchAll(\PDO::FETCH_CLASS, $className);
+    }
+
+    public static function getInstance(): self
+    {
+        if (self::$instance === null) {
+            self::$instance = new self();
+        }
+        return self::$instance;
     }
 }
