@@ -122,12 +122,19 @@ abstract class ActiveRecordEntity
         $this->refresh();
     }
 
+    public function delete(): void
+    {
+        $db = Database::getInstance();
+        $db->query('DELETE FROM `' . static::getTableName() . '` WHERE id = :id', [':id' => $this->id]);
+        $this->id = null;
+    }
+
     public function refresh(): void
     {
         $objectFromDb = static::getById($this->id);
         $properties = get_object_vars($objectFromDb);
 
-        foreach ($properties as $key => $value){
+        foreach ($properties as $key => $value) {
             $this->$key = $value;
         }
     }
