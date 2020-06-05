@@ -2,6 +2,7 @@
 
 namespace MyProject\Controllers;
 
+use MyProject\Exceptions\NotFoundException;
 use MyProject\Models\Articles\Article;
 use MyProject\Services\Database;
 use MyProject\Views\View;
@@ -24,8 +25,7 @@ class ArticlesController
         $article = Article::getById($article_id);
 
         if (empty($article)) {
-            $this->view->renderHtml('errors/404.php', [], 'Page Not Found', 404);
-            return;
+            throw new NotFoundException();
         }
 
         $this->view->renderHtml('articles/view.php', ['article' => $article]);

@@ -2,6 +2,8 @@
 
 namespace MyProject\Services;
 
+use MyProject\Exceptions\DbException;
+
 class Database
 {
 
@@ -13,10 +15,16 @@ class Database
     {
         $db_options = (require __DIR__ . '/../../settings.php')['db'];
 
+        try {
+
         $this->conn = new \PDO('mysql:host=' . $db_options['host'] . ';dbname=' . $db_options['dbname'],
             $db_options['user'], $db_options['password']);
 
         $this->conn->exec('SET NAMES UTF8');
+        }catch (\PDOException $e){
+            throw new DbException('Error while connection to database: ' . $e->getMessage());
+        }
+
     }
 
     public function query(string $sql, $params = [], string $className = 'stdClass'): ?array
