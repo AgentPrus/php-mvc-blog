@@ -101,11 +101,12 @@ abstract class ActiveRecordEntity
 
     private function create(array $mappedProperties): void
     {
+        $filteredProps = array_filter($mappedProperties);
         $properties = [];
         $values = [];
         $params = [];
 
-        foreach ($mappedProperties as $column => $value) {
+        foreach ($filteredProps as $column => $value) {
             if ($value !== null) {
                 $properties[] = $column;
                 $values[] = ':' . $column;
@@ -114,7 +115,6 @@ abstract class ActiveRecordEntity
         }
 
         $sql = 'INSERT INTO ' . static::getTableName() . ' (' . implode(', ', $properties) . ')' . ' VALUES ' . '(' . implode(', ', $values) . ')';
-
         $db = Database::getInstance();
         $db->query($sql, $params, static::class);
         $this->id = $db->getLastInsertId();
@@ -137,6 +137,19 @@ abstract class ActiveRecordEntity
         foreach ($properties as $key => $value) {
             $this->$key = $value;
         }
+    }
+
+    protected static function findOne(string $columnName, $value): ?self
+    {
+        $db = Database::getInstance();
+        $sql = 'SELECT `' . $columnName . '` FROM `' . static::getTableName() . '` WHERE `' . $columnName . '` = :value LIMIT 1;';
+        $result = $db->query($sql, ['value' => $value], static::class);
+
+        if ($result === []) {
+            return null;
+        }
+
+        return $result[0];
     }
 
     abstract protected static function getTableName(): string;
