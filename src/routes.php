@@ -9,5 +9,6 @@ return [
     '~^articles/create$~' => [ArticlesController::class, 'create'],
     '~articles/delete/(\d+)$~' => [ArticlesController::class, 'delete'],
     '~^users/register$~' => [UsersController::class, 'signUp'],
+    '~^users/(\d+)/activate/(.+)$~' => [UsersController::class, 'activate'],
     '~^$~' => [MainController::class, 'main']
 ];
