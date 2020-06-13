@@ -36,6 +36,24 @@ class User extends ActiveRecordEntity
         return $this->email;
     }
 
+    /**
+     * @return string
+     */
+    public function getPasswordHash(): string
+    {
+        return $this->passwordHash;
+    }
+
+    public function getAuthToken(): string
+    {
+        return $this->authToken;
+    }
+
+    private function refreshAuthToken()
+    {
+        $this->authToken = sha1(random_bytes(100)) . sha1(random_bytes(100));
+    }
+
     public function getNickName(): string
     {
         return $this->nickname;
@@ -92,8 +110,38 @@ class User extends ActiveRecordEntity
         return $user;
     }
 
-    public function activate():void {
+    public function activate(): void
+    {
         $this->isConfirmed = true;
         $this->save();
+    }
+
+    public static function login(array $loginDate): User
+    {
+        if (empty($loginDate['email'])) {
+            throw new InvalidArgumentsException('Email is required');
+        }
+
+        if (empty($loginDate['password'])) {
+            throw new InvalidArgumentsException('Password is required');
+        }
+
+        $user = User::findOne('email', $loginDate['email']);
+        if ($user == null) {
+            throw new InvalidArgumentsException('No user with this email');
+        }
+
+        if (!password_verify($loginDate['password'], $user->getPasswordHash())) {
+            throw new InvalidArgumentsException('Wrong Password!');
+        }
+
+        if (!$user->isConfirmed) {
+            throw new InvalidArgumentsException('User dose not activated');
+        }
+
+        $user->refreshAuthToken();
+        $user->save();
+
+        return $user;
     }
 }

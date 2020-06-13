@@ -142,7 +142,7 @@ abstract class ActiveRecordEntity
     protected static function findOne(string $columnName, $value): ?self
     {
         $db = Database::getInstance();
-        $sql = 'SELECT `' . $columnName . '` FROM `' . static::getTableName() . '` WHERE `' . $columnName . '` = :value LIMIT 1;';
+        $sql = 'SELECT * FROM `' . static::getTableName() . '` WHERE `' . $columnName . '` = :value LIMIT 1;';
         $result = $db->query($sql, ['value' => $value], static::class);
 
         if ($result === []) {

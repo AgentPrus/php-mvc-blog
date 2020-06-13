@@ -3,34 +3,17 @@
 namespace MyProject\Controllers;
 
 use MyProject\Models\Articles\Article;
-use MyProject\Services\Database;
-use MyProject\Views\View;
+use MyProject\Services\UserAuthService;
 
-class MainController
+class MainController extends AbstractController
 {
-    private $view;
-
-    private $db;
-
-    public function __construct()
-    {
-        $this->view = new View(__DIR__ . '/../../../templates');
-        $this->db = Database::getInstance();
-    }
-
     public function main()
     {
         $articles = Article::getAll();
-        $this->view->renderHtml('main/main.php', ['articles' => $articles], 'Home');
-    }
-
-    public function welcome(string $name)
-    {
-        $this->view->renderHtml('main/welcome.php', ['name' => $name], 'Welcome');
-    }
-
-    public function sayBye(string $name)
-    {
-        echo 'Bye ' . $name;
+        $this->view->renderHtml('main/main.php',
+            [
+                'articles' => $articles,
+                'user' => UserAuthService::getUserByToken()
+            ], 'Home');
     }
 }

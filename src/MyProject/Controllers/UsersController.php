@@ -2,23 +2,14 @@
 
 namespace MyProject\Controllers;
 
-use Couchbase\PasswordAuthenticator;
 use MyProject\Exceptions\InvalidArgumentsException;
 use MyProject\Models\Users\User;
 use MyProject\Models\Users\UserActivationService;
-use MyProject\Views\View;
+use MyProject\Services\UserAuthService;
 use MyProject\Services\EmailSender;
 
-class UsersController
+class UsersController extends AbstractController
 {
-    /** @var View */
-    private $view;
-
-    public function __construct()
-    {
-        $this->view = new View(__DIR__ . '/../../../templates');
-    }
-
     public function signUp()
     {
         if (!empty($_POST)) {
@@ -46,12 +37,38 @@ class UsersController
         $this->view->renderHtml('users/signUp.php', [], 'Registration');
     }
 
-    public function activate(int $userId, string $activationCode){
+    public function activate(int $userId, string $activationCode)
+    {
         $user = User::getById($userId);
         $isValidCode = UserActivationService::checkActivationCode($user, $activationCode);
-        if($isValidCode){
+        //TODO: Handle possible exception
+        if ($isValidCode) {
             $user->activate();
             echo 'Your account have been activated';
         }
+    }
+
+    public function login()
+    {
+        if (!empty($_POST)) {
+            try {
+                $user = User::login($_POST);
+                UserAuthService::createToken($user);
+                header('Location: /');
+                exit();
+            } catch (InvalidArgumentsException $e) {
+                $this->view->renderHtml('users/login.php', ['error' => $e->getMessage()]);
+                return;
+            }
+        }
+        $this->view->renderHtml('users/login.php');
+    }
+
+    public function logout()
+    {
+        if (!empty($_COOKIE['token'])) {
+            setcookie('token', '', time() - 60 * 60 * 24 * 365, '/'); // delete cookie by name token
+        }
+        header('Location: /users/login');
     }
 }

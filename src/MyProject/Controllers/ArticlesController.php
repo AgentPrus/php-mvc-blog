@@ -4,22 +4,11 @@ namespace MyProject\Controllers;
 
 use MyProject\Exceptions\NotFoundException;
 use MyProject\Models\Articles\Article;
-use MyProject\Services\Database;
-use MyProject\Views\View;
 use MyProject\Models\Users\User;
 
 
-class ArticlesController
+class ArticlesController extends AbstractController
 {
-    private $view;
-    private $db;
-
-    public function __construct()
-    {
-        $this->db = Database::getInstance();
-        $this->view = new View(__DIR__ . '/../../../templates');
-    }
-
     public function view(int $article_id)
     {
         $article = Article::getById($article_id);
@@ -72,6 +61,6 @@ class ArticlesController
 
         $article->delete();
 
-        $this->view->renderHtml('articles/delete.php', ['article' => $article],'Deleted Article');
+        $this->view->renderHtml('articles/delete.php', ['article' => $article], 'Deleted Article');
     }
 }
