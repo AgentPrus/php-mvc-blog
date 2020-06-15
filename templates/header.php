@@ -14,7 +14,7 @@
 <body>
 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
     <div class="container">
-        <a href="#" class="navbar-brand">My Blog</a>
+        <a href="/" class="navbar-brand">My Blog</a>
         <button class="navbar-toggler" data-toggle="collapse" data-target="#myNav">
             <span class="navbar-toggler-icon"></span>
         </button>

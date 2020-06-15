@@ -35,4 +35,7 @@ $controller->$actionName(...$matches);
 } catch (\MyProject\Exceptions\NotFoundException $e){
     $view = new \MyProject\Views\View(__DIR__ . '/../templates/errors');
     $view->renderHtml('404.php', ['error' => $e->getMessage()], 'Page Not Found', 404);
+} catch (\MyProject\Exceptions\UnauthorizedException $e){
+    $view = new \MyProject\Views\View(__DIR__ . '/../templates/errors');
+    $view->renderHtml('401.php', ['error' => $e->getMessage()], 'Unauthorized', 401);
 }
