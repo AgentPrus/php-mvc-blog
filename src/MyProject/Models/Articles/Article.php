@@ -64,12 +64,12 @@ class Article extends ActiveRecordEntity
 
     public static function createFromArray(array $fields, User $author): Article
     {
-        if(empty($fields['name'])){
+        if (empty($fields['name'])) {
             throw new InvalidArgumentsException('Name is required field');
         }
 
-        if(empty($fields['text'])){
-            throw new InvalidArgumentsException('text is required field');
+        if (empty($fields['text'])) {
+            throw new InvalidArgumentsException('Text is required field');
         }
 
         $article = new Article();
@@ -80,5 +80,23 @@ class Article extends ActiveRecordEntity
         $article->save();
 
         return $article;
+    }
+
+    public function updateFromArray(array $fields): Article
+    {
+        if (empty($_POST['name'])) {
+            throw new InvalidArgumentsException('Name is required field');
+        }
+
+        if (empty($_POST['text'])) {
+            throw new InvalidArgumentsException('Text is required field');
+        }
+
+        $this->setName($_POST['name']);
+        $this->setText($_POST['text']);
+
+        $this->save();
+
+        return $this;
     }
 }

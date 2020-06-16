@@ -30,15 +30,25 @@ class ArticlesController extends AbstractController
     {
         $article = Article::getById($article_id);
 
-        if (empty($article)) {
-            $this->view->renderHtml('errors/404.php', [], 'Page Not Found', 404);
-            return;
+        if ($article === null) {
+            throw new NotFoundException();
         }
 
-        $article->setName('New Article Name');
-        $article->setText('New Article Text');
+        if ($this->user === null) {
+            throw new UnauthorizedException();
+        }
 
-        $article->save();
+        if (!empty($_POST)) {
+            try {
+                $article->updateFromArray($_POST);
+            } catch (InvalidArgumentsException $e) {
+                $this->view->renderHtml('articles/edit.php',
+                    ['error' => $e->getMessage(), 'article' => $article], 'Edit Article');
+            }
+            header('Location: /articles/' . $article->getId(), true, 302);
+            exit();
+        }
+        $this->view->renderHtml('articles/edit.php', ['article' => $article], 'Edit Article');
     }
 
     public function create(): void
