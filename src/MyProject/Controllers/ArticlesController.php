@@ -81,6 +81,7 @@ class ArticlesController extends AbstractController
 
         $article->delete();
 
-        $this->view->renderHtml('articles/delete.php', ['article' => $article], 'Deleted Article');
+        $this->view->renderHtml('articles/delete.php',
+            ['article' => $article, 'user' => $this->user], 'Deleted Article');
     }
 }
